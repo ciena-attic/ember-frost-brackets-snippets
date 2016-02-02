@@ -1,39 +1,19 @@
-# Pretty straightforward
-# https://docs.travis-ci.com/user/languages/javascript-with-nodejs#Choosing-Node-versions-to-test-against
 language: node_js
 node_js:
 - '5.3'
-
-# Use containers
-# https://docs.travis-ci.com/user/workers/container-based-infrastructure/#Routing-your-build-to-container-based-infrastructure
 sudo: false
-
-# Skip tags
-# https://docs.travis-ci.com/user/customizing-the-build/#Building-Specific-Branches
 branches:
   except:
   - /^v[0-9\.]+/
-
-# Install global dependencies
-# bower isn't needed by node packages, so you can leave it off if you don't need it
-# also, check for a version-bump comment in a PR description (safely becomes noop for non PR builds)
 before_install:
 - npm install -g coveralls pr-bumper bower
 - pr-bumper check
-
-# Extend the default install step with a bower install (again, you can skip this for a node project)
 install:
 - npm install
-- bower install
-
-# Upload coverage info to coveralls.io, but first fix naming issue w.r.t. ember addons
-# Replace my-addon-name with the actual name of your addon (i.e. ember-frost-button)
 after_success:
-- sed -i -- 's/SF:my-addon-name\/\(.*\)/SF:addon\/\1.js/' coverage/lcov.info && rm -f coverage/lcov.info--
+- sed -i -- 's/SF:my-addon-name\/\(.*\)/SF:addon\/\1.js/' coverage/lcov.info && rm
+  -f coverage/lcov.info--
 - cat coverage/lcov.info | coveralls
-
-# Add support for node >= v4 compilers
-# https://docs.travis-ci.com/user/languages/javascript-with-nodejs#Node.js-v4-(or-io.js-v3)-compiler-requirements
 env:
   matrix:
   - CXX=g++-4.8
@@ -43,23 +23,17 @@ addons:
     - ubuntu-toolchain-r-test
     packages:
     - g++-4.8
-
-# Perform a version bump before publishing to npm
 before_deploy:
 - pr-bumper bump
-
-# Publish to npm registry
-# https://docs.travis-ci.com/user/deployment/npm
 deploy:
   provider: npm
   email: npm.ciena@gmail.com
   skip_cleanup: true
   api_key:
+    secure: a6QSThiQya0POQskeQywJzzmuwNBezyBGITuX1QASuisbZthZrSqPFtj1kgytA1W0JgbmfVoS3CdXsswEzUV8IgD8K1ebLwSA9ycl8eEtfnCds/jRwlGrqrRwOuoIj4/Sf0hQjeDSUdYV4a+Yn/auIXL7SpgQd1gP3g9FHx2YZU9oP0e2b0KnZIscts/KMzRtualab48szgrPbVvir9eEgBxq6U+UH+YaD8ZM7g4yQL5yBYVib9sFdoxIspGMJbBThm0ObWA+SsLmtMZBHGE8n15AbZsslu8qXkoWudri6vUkXAC2nAAyxPGtLpd5NjUCBQMeLIuHhfrc4/E8c4dmZzyywlROxhSF3ep3zEdELWpOvZcqbhJI91jWnjDU6QuX6PeZWltPTnbKdteBDrW5gb+QdVzm0rT3uVRyFAmh0rfuEowji/3inQ4I4pHvc0BMEHPje+HN3gaJyqFaGs1MlgBaJah3SbtDkesQbw27H0rttsXg8r370Fw2aR8VTI2TiKGpSDiLF9Wn5ls2VCaMo8FadxXTrCMMqNif7/6AbMmBYrPlLACAKSsswlkcMr4U+o2AQPMTic6F1qIw8BOgVV0gAk/iHWmN3baG5lcLvp1Xo+WKUVqAZyNxH7A5MqP094LB74RODZr/H9Tc81B0d9j1dem4m/BEeA1hneJMY0=
   on:
     branch: master
     tags: false
-
-# Configure slack notifications
-# https://docs.travis-ci.com/user/notifications/#Slack-notifications
 notifications:
   slack:
+    secure: PLVUW5r3dyYdRLNLaOCs5/gZecVUl1Gr5ML4V0Eu9IjwprLrrqd6hXvkldwsm96A5sYHUai3E4xlqqihVCEDOLI0SuXHA4ktOBfECA+WC4NbD7hjlP21ZKbIc2v/mDbXpzz0Gj3eFbA1m/otpNC+iDhfvihQrFXtOYe3N/k6wrF0Gt0X+8lmfnXPYKDPlqvzP0aOtWjGKtaEREBZCFrfb4/HZRGnSYWRwzJhssI8X/xZ95MYut24uHYtaA/yb5bYPIEQuMUD+FgTik9cO3/kkgEFAid9g1mJc6D6vtx0Em/DKJCA0+HsokkZelU7ziZYhA9UD6kafD6A5mbJfR95Qa3/btOZEphvU77FVMLwdo4fsufc0Tc/cgHRda8JJvQSie5oDICW2FT5D4WfTd6QHkzXkeFNsM4Q/DHJZx8l0fWMX8lhchmkE7HcmPzgAp8Z+NXyHsfDd7eIdDHtPTi6yS0wTj15Iy2nolrtUYCkcHcB2N+JdASRmudrbbCJe39K1/RQvb9GtuXIu77gbWacgfft5a4mqXQATfB2Cz2sy6JwYiSUn+mGXAgnUkjTdgYxGK04ctUATBaGeLYjMJoHrofESAIhmNJztoSsS8xI0A/2mb93leBUWP4p141bbiFdjBh8SQjaB/nKJEDfR/mKbT2t7sl6rZDbtIFdbqyZ8ME=
