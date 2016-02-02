@@ -2238,4 +2238,20 @@
   tag: Bootstrap
   tagHide: true
   text: |
-        <button type="button" class="btn btn-lg btn-danger" data-toggle="popover" data-placement="left" data-trigger="focus" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?">Click to toggle popover</button>                
+        <button type="button" class="btn btn-lg btn-danger" data-toggle="popover" data-placement="left" data-trigger="focus" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?">Click to toggle popover</button>               
+
+- trigger: frost-button
+  desription: Ember Frost button
+  scope: any
+  text: |
+        {{#frost-button on-click=(action '') class=''}}
+          <div class='text'></div>
+        {{/frost-button}} 
+
+- trigger: hbs-if
+  desription: HBS if block
+  scope: any
+  text: |
+        {{#if }}
+
+        {{/if}}
